@@ -14,13 +14,16 @@ public class App
 {
 
 
+
     public static void main( String[] args ) throws WriterException, IOException {
         final int requestedWidth = 400;
         final int requestedHeight  = 300;
         final String eanValue = "8592084405892";
         final String imageFormat = "jpg";
+        final String outputLocation = "sample/qrcode_" + System.currentTimeMillis() + ".jpg";
         final BitMatrix bitMatrix = new EAN13Writer()
                 .encode(eanValue, BarcodeFormat.EAN_13, requestedWidth, requestedHeight);
-        MatrixToImageWriter.writeToPath(bitMatrix,imageFormat, Paths.get("sample/qrcode_" + System.currentTimeMillis() + ".jpg"));
+        MatrixToImageWriter.writeToPath(bitMatrix,imageFormat, Paths.get(outputLocation));
+        System.out.println("Image written to: " + outputLocation);
     }
 }
