@@ -10,6 +10,7 @@ import com.google.zxing.oned.EAN8Writer;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 
@@ -61,14 +62,23 @@ public class App
         final int requestedWidth = 400;
         final int requestedHeight  = 300;
 
-        final String dataEan8 = "4857262";
-        final String dataEan13 = "973518470290";
+        Random randomGenerator = new Random();
+
+        char [] ean8Char = new char[7];
+        char [] ean13Char = new char[12];
+        IntStream.range(0,7).forEach(i -> ean8Char[i] =  (char) ('0' + randomGenerator.nextInt(10)));
+        IntStream.range(0,12).forEach(i -> ean13Char[i] = (char) ('0' + randomGenerator.nextInt(10)));
+
+
+        final String dataEan8 = new String(ean8Char);
+        final String dataEan13 = new String(ean13Char);
+
 
         final String eanValue13 = dataEan13 + genChecksumNumberForEan13And8(dataEan13);
         final String eanValue8 = dataEan8 + genChecksumNumberForEan13And8(dataEan8);
         final String imageFormat = "jpg";
-        final String outputLocationEan13 = "sample/ean13_" + System.currentTimeMillis() + ".jpg";
-        final String outputLocationEan8 = "sample/ean8_" + System.currentTimeMillis() + ".jpg";
+        final String outputLocationEan13 = "sample/ean13_" + dataEan13 + ".jpg";
+        final String outputLocationEan8 = "sample/ean8_" + dataEan8 + ".jpg";
         final BitMatrix bitMatrix8 = new EAN8Writer()
                 .encode(eanValue8, BarcodeFormat.EAN_8, requestedWidth, requestedHeight);
 
@@ -76,7 +86,7 @@ public class App
                 .encode(eanValue13, BarcodeFormat.EAN_13, requestedWidth, requestedHeight);
         MatrixToImageWriter.writeToPath(bitMatrix13,imageFormat, Paths.get(outputLocationEan13));
         MatrixToImageWriter.writeToPath(bitMatrix8,imageFormat, Paths.get(outputLocationEan8));
-        System.out.println("Image ean8 written to: " + outputLocationEan8);
-        System.out.println("Image ean13 written to: " + outputLocationEan13);
+        System.out.println("Image ean8 written to: " + outputLocationEan8 + " for code:" + dataEan8);
+        System.out.println("Image ean13 written to: " + outputLocationEan13 + " for code:" + dataEan13);
     }
 }
