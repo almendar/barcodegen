@@ -10,3 +10,4 @@ buildNumber.properties
 #idea specific
 *.iml
 .idea/
+sample/qrcode*
